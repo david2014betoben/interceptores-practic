@@ -61,7 +61,7 @@ export function configureApp(app: INestApplication): void {
     )
     .setVersion('1.0')
     .addTag('orders', 'Gestión de pedidos')
-    .setContact('Equipo de desarrollo', '', 'equipo@example.com')
+    .setContact('Equipo de desarrollo #3', '', 'equipo@example.com')
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
