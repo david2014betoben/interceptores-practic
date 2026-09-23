@@ -6,52 +6,56 @@ import {
   ParseIntPipe,
   Post,
 } from '@nestjs/common';
+import {
+  ApiOperation,
+  ApiParam,
+  ApiTags,
+} from '@nestjs/swagger';
 import { CreateOrderDto } from './dto/create-order.dto.js';
 import { OrdersService } from './orders.service.js';
 
-// =============================================================================
-// OrdersController
-// -----------------------------------------------------------------------------
-// El CRUD ya funciona. Aquí solo hay que agregar decoradores de Swagger
-// (todos se importan desde '@nestjs/swagger').
-//
-// TODO [Estudiante 1 - Swagger]: describe QUÉ hace cada endpoint.
-//   - @ApiTags('orders') sobre la clase, para agruparlos en Swagger UI.
-//   - @ApiOperation({ summary: '...', description: '...' }) en cada método.
-//   - @ApiParam({ name: 'id', description: '...', example: 1 }) en GET /orders/:id.
-//
-// TODO [Estudiante 3 - Swagger]: describe QUÉ puede responder cada endpoint.
-//   - @ApiOkResponse({ type: Order }) / @ApiOkResponse({ type: [Order] })
-//   - @ApiCreatedResponse({ type: Order }) en POST
-//   - @ApiBadRequestResponse(...) en POST (falla la validación del DTO)
-//   - @ApiNotFoundResponse(...) en GET /orders/:id
-//   - @ApiRequestTimeoutResponse(...) en el reporte pesado (¡lo lanza tu interceptor!)
-//
-// Coordinen entre ustedes: ambos editan este archivo (hagan commits pequeños).
-// =============================================================================
-
+@ApiTags('orders')
 @Controller('orders')
 export class OrdersController {
   constructor(private readonly ordersService: OrdersService) {}
 
   @Get()
+  @ApiOperation({
+    summary: 'Listar todos los pedidos',
+    description: 'Obtiene la lista completa de pedidos registrados.',
+  })
   findAll() {
     return this.ordersService.findAll();
   }
 
-  // Esta ruta se declara ANTES de ':id' para que se lea de lo más específico
-  // a lo más genérico.
   @Get('reports/heavy-process')
+  @ApiOperation({
+    summary: 'Generar reporte pesado',
+    description: 'Genera un reporte que requiere un procesamiento prolongado.',
+  })
   generateHeavyReport() {
     return this.ordersService.generateHeavyReport();
   }
 
   @Get(':id')
+  @ApiOperation({
+    summary: 'Obtener un pedido por ID',
+    description: 'Obtiene el detalle de un pedido específico.',
+  })
+  @ApiParam({
+    name: 'id',
+    description: 'ID del pedido',
+    example: 1,
+  })
   findOne(@Param('id', ParseIntPipe) id: number) {
     return this.ordersService.findOne(id);
   }
 
   @Post()
+  @ApiOperation({
+    summary: 'Crear un pedido',
+    description: 'Crea un nuevo pedido con los datos proporcionados.',
+  })
   create(@Body() dto: CreateOrderDto) {
     return this.ordersService.create(dto);
   }
