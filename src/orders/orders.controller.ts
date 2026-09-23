@@ -9,14 +9,6 @@ import {
 import { ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 import { CreateOrderDto } from './dto/create-order.dto.js';
 import { OrdersService } from './orders.service.js';
-import {
-  ApiBadRequestResponse,
-  ApiCreatedResponse,
-  ApiNotFoundResponse,
-  ApiOkResponse,
-  ApiRequestTimeoutResponse,
-} from '@nestjs/swagger';
-import { Order } from './entities/order.entity.js';
 
 @ApiTags('orders')
 @Controller('orders')
