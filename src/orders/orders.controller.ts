@@ -8,6 +8,14 @@ import {
 } from '@nestjs/common';
 import { CreateOrderDto } from './dto/create-order.dto.js';
 import { OrdersService } from './orders.service.js';
+import {
+  ApiBadRequestResponse,
+  ApiCreatedResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiRequestTimeoutResponse,
+} from '@nestjs/swagger';
+import { Order } from './entities/order.entity.js';
 
 // =============================================================================
 // OrdersController
@@ -35,6 +43,7 @@ export class OrdersController {
   constructor(private readonly ordersService: OrdersService) {}
 
   @Get()
+  @ApiOkResponse({ type: [Order] })
   findAll() {
     return this.ordersService.findAll();
   }
@@ -42,16 +51,21 @@ export class OrdersController {
   // Esta ruta se declara ANTES de ':id' para que se lea de lo más específico
   // a lo más genérico.
   @Get('reports/heavy-process')
+  @ApiRequestTimeoutResponse()
   generateHeavyReport() {
     return this.ordersService.generateHeavyReport();
   }
 
   @Get(':id')
+  @ApiOkResponse({ type: Order })
+  @ApiNotFoundResponse()
   findOne(@Param('id', ParseIntPipe) id: number) {
     return this.ordersService.findOne(id);
   }
 
   @Post()
+  @ApiCreatedResponse({ type: Order })
+  @ApiBadRequestResponse()
   create(@Body() dto: CreateOrderDto) {
     return this.ordersService.create(dto);
   }
